@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use \app\Models\Region;
+use \App\Models\Region;
+use Illuminate\Support\Facades\DB;
 
 class RegionController extends Controller
 {
@@ -12,10 +13,15 @@ class RegionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getAllRegions()
     {
-        //
+        $list = Region::all();
+        return view('liste_region',compact('list'));
     }
+    public function returnBack ()
+            {
+                return back();
+            }
 
     /**
      * Show the form for creating a new resource.
@@ -24,7 +30,7 @@ class RegionController extends Controller
      */
     public function create()
     {
-        return View('formulaire_region');
+        return view('formulaire_region');
     }
 
     /**
@@ -33,23 +39,16 @@ class RegionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-       try{
-        DB::beginTransaction();
-        Region:Create(["label"=>$request->label]);
-        DB::Commit();
-       } catch(\throwable $th) {
-        return back();
-       }
-    }
 
-    public function insert(Request $request) {
-        request()->validate([
-            'label' => ['required'],
-        ]);
-        return "Nous avons enregistré votre region qui est " . request('label') . ' .';
-    }
+
+    public function save(Request $validated)
+        {
+
+            $query = DB::table('regions')->insert([
+                'label' => $validated->input('label')
+            ]);
+            return redirect("/region_list");
+        }
 
     /**
      * Display the specified resource.
@@ -57,10 +56,6 @@ class RegionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -68,9 +63,9 @@ class RegionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function editRegionById()
     {
-        //
+            return view("region_update");
     }
 
     /**
@@ -91,8 +86,15 @@ class RegionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function deleteRegionById($id)
     {
-        //
+        try{
+            DB::beginTransaction();
+            Region::find($id)->delete();
+            DB::commit();
+            return redirect("/region_list");
+        } catch(\Throwable $th) {
+            return back();
+        }
     }
 }

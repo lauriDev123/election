@@ -1,0 +1,10 @@
+<app-header></app-header>
+<h1>{{title}}</h1>
+
+<input type="number" [value]="nbr">
+
+<h2>Le factoriel de {{nbr2}} est {{factoriel(nbr2)}}</h2>
+
+<input type="submit" (click)="factoriel(nbr)" value="Valider">
+
+<app-footer></app-footer>

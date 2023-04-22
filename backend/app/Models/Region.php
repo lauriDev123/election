@@ -8,13 +8,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use illuminate\Support\Facades\DB;
 
 /**
  * Class Region
- * 
+ *
  * @property int $id
  * @property string $label
- * 
+ *
  * @property Collection|Participant[] $participants
  *
  * @package App\Models
